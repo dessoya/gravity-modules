@@ -1,0 +1,19 @@
+.ctrl-dialog {
+	opacity: 0.8;
+	background: #444;
+	position:absolute;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;	
+}
+
+.ctrl-dialog .inner {
+	visibility: hidden;
+	box-shadow: 0px 0px 10px #fff;
+	margin:50px auto;
+	background: #fff;
+	border: 1px solid black;
+	border-radius: 4px 4px 4px 4px;
+	padding: 6px 10px;
+}

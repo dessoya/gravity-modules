@@ -1,0 +1,7 @@
+{
+	"use": "class|1.*,ui/control/builder|1.*",
+
+	"debug": {
+		"css": [ "Dialog.css" ]
+	}
+}

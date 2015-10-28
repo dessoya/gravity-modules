@@ -1,0 +1,30 @@
+
+.popup-menu {
+	font-size: 11px;
+	background: #ffffff;
+	padding: 1px;
+	cursor: default;
+}
+
+.popup-menu .ctrl-popupmenu {
+	border: 1px solid #cecece;
+	background: #eeeeee;
+	padding: 6px 10px;
+}
+
+.popup-menu .title{
+	padding: 4px 10px;
+	border-bottom: 1px solid #cecece;
+	font-weight: bold;
+}
+
+.popup-menu .item {
+	padding: 4px 10px;
+	border: 1px solid transparent;
+}
+
+.popup-menu .item.hover {
+	cursor: pointer;
+	background: #cecece;
+	border: 1px solid #bbbbbb;
+}

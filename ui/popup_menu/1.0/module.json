@@ -1,0 +1,8 @@
+{
+	"use": "ui/control|1.*",
+
+	"debug": {
+		"css": [ "PopupMenu.css" ]
+	}
+
+}
