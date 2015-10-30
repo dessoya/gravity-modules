@@ -4,6 +4,7 @@ var Controls = { }
 
 Controls.edit = require('ui/control/edit')
 Controls.button = require('ui/control/button')
+Controls.grid = require('ui/control/grid')
 
 function readControlParams(element, paramNames) {
 	var params = { }
@@ -33,8 +34,9 @@ function build(owner, element) {
 			item.removeAttribute("name")
 
 			if(controlClass in Controls) {
-				var control = Controls[controlClass].create()
-				control.init(readControlParams(item, control.params))
+				var cc = Controls[controlClass]
+				var control = cc.create(readControlParams(item, cc.prototype.params))
+				// control.init()
 				// control.name = controlName
 				owner[controlName] = control
 				if(control.events) {

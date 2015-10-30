@@ -4,10 +4,10 @@ var Control		= require('ui/control')
 
 var Edit = Control.inherit({
 
-    noWrap: true,
+    // noWrap: true,
 	params: 'width,password'.split(','),
 
-	onInit: function() {
+	onInit: function(params) {
 		this.type = 'text'
 		this.width = 100
 
@@ -21,17 +21,17 @@ var Edit = Control.inherit({
 	},
 
 	get_value: function() {
-		var ph = this.getPlaceHolderElement()
+		var ph = this.el
 		if(ph) {
-			return ph.querySelector('.ctrl-edit').value
+			return ph.value
 		}
 		return null
 	},
 
 	set_value: function(value) {
-		var ph = this.getPlaceHolderElement()
+		var ph = this.el
 		if(ph) {
-			ph.querySelector('.ctrl-edit').value = value
+			ph.value = value
 		}
 	},
 
@@ -44,7 +44,7 @@ var Edit = Control.inherit({
 	},
 
 	render: function() {
-		return require('Edit.html')({ width: this.width, id: this.id, type: this.getHTMLType() })
+		return require('Edit.html')({ id: this.elemId, width: this.width, type: this.getHTMLType() })
 	},
 
 	onKeypress: function(element, event) {
@@ -54,10 +54,10 @@ var Edit = Control.inherit({
 	},
 
 	focus: function() {
-		var ph = this.getPlaceHolderElement()
+		var ph = this.el
 		if(ph) {
 			setTimeout(function() {
-				ph.querySelector('.ctrl-edit').focus();
+				ph.focus();
 			}, 1);
 		}
 	}

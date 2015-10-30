@@ -1,3 +1,3 @@
 {
-	"use": "ui/control/edit|1.*,ui/control/button|1.*"
+	"use": "ui/control/edit|1.*,ui/control/button|1.*,ui/control/grid|1.*"
 }

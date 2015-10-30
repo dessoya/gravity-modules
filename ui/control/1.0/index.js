@@ -1,6 +1,8 @@
 
 var Class = require('class');
 
+// NodeList.prototype.unshift = Array.prototype.unshift;
+
 function makeEventFunction(event, event2) {
 	if(event2) {
 		return function(item, value, control) {
@@ -20,166 +22,69 @@ function makeEventFunction(event, event2) {
 	}
 }
 
-function mkel(props) {
-
-	var el = document.createElement( props.tag );
-	if(props['class']) el.className = props['class'];
-	if(props.id) el.id = props.id;
-
-	return el;
-}
-
-var Control = Class.EventEmmiter.inherit({
-
-    controlId: function() {
-    	return this.controllName + '-' + this.id;
-    },
-
-	defineProps: function(propsList) {
-		propsList = propsList.split(',');
-		var props = {}, i = propsList.length; while(i--) {
-/*
-			var propParams = propsList[i].split(':'), prop = propParams[0];
-			for(var j = 1, k = propParams.length; j < k; j++)
-				this['propMaker_'+propParams[j]](prop);
-*/
-
-			var prop = propsList[i];
-
-			props[prop] = {
-				get: this['get_' + prop],
-				set: this['set_' + prop]
-			}
-		}		
-		Object.defineProperties(this, props);
-	},
+var Control = Class.inherit({
 
 	global: {
-		idIterator: 1,
-		plugins: {}
-	},
-
-	globalInterface: {
-		addPlugin: function(type, plugin) {
-			if(!(this.global.plugins[type])) this.global.plugins[type] = [];
-			this.global.plugins[type].push(plugin);
-		}
-	},
-
-	getProps: function(default_, props) {
-		for(var name in default_) {
-			if(name in props) continue
-			this[name] = default_[name]
-		}
-		for(var name in props) {
-			this[name] = props[name]
-		}
+		idIterator: 1
 	},
 
 	onCreate: function() {
-		Class.EventEmmiter.prototype.onCreate.apply(this, [])
-		this.id = Control.prototype.global.idIterator ++;
-		this.elemId = 'ctrl-' + this.id;
-		this.placeHolderElement = null;
+		this.elemId = 'ctrl-' + ( Control.prototype.global.idIterator ++ );
+		this.el = null;
 		if(this.onInit) {
 			this.onInit.apply(this, arguments)
 		}
 	},
 
-	init: function(params) {
-		for(var key in params) {
-			this[key] = params[key]
-		}
-	},
-
-	render: function() {
-		return '';
-	},
-
-	getPlaceHolderElement: function() {
-		return this.placeHolderElement;
-	},
-
 	remove: function() {
-
-		if(this.appendedToDocument) {
-			this.placeHolderElement.parentNode.removeChild(this.placeHolderElement)
-			return
+		if(this.el) {
+			this.el.parentNode.removeChild(this.el)
+			this.el = null
 		}
-
-		var ph = this.getPlaceHolderElement();
-		if(null === ph) return;
-
-		// ph.parentNode.removeChild(ph);
-		if(this.noWrap) {
-		}
-		else {
-			this.placeHolderElement.removeChild(document.getElementById(this.elemId));
-		}
-
-		this.placeHolderElement = null;
-	},
-
-	bind: function(selector) {
-		if('string' === typeof selector) this.selector = selector;
-		var el = 'string' === typeof selector ? document.querySelector(selector) : selector;
-		this.placeHolderElement = el;
-	},
-
-	appendToDocument: function() {
-		this.appendedToDocument = true;
-		this.placeHolderElement = document.createElement('div')
-		document.querySelector('body').appendChild(this.placeHolderElement)
-	},
-
-	appendToElement: function(element) {
-		this.appendedToDocument = true;
-		this.placeHolderElement = document.createElement('div')
-		element.appendChild(this.placeHolderElement)
 	},
 
 	hide: function() {
-	    // console.log('hide')
-		if(this.placeHolderElement) {
-			this.placeHolderElement.style.display = 'none'
+		if(this.el) {
+			this.el.style.display = 'none'
 		}
 	},
 
 	show: function() {
-	    // console.log('show')
-		if(this.placeHolderElement) {
-			this.placeHolderElement.style.display = 'block'
+		if(this.el) {
+			this.el.style.display = 'block'
 		}
 	},
 
-	place: function(selector, inThisSelector) {
-		this.bind(selector);
-		var body = this.render();
+	place: function(selector) {
+		if('string' === typeof selector) {
+			selector = document.querySelector(selector)
+		}		
+		this.parentElement = selector		
+		selector.innerHTML = this.render()
 
-		if(inThisSelector) {
-			this.placeHolderElement.setAttribute('id', this.elemId);
-			if(this.controlName) {
-				this.placeHolderElement.classList.add('ctrl-' + this.controlName)
-			}
-			this.placeHolderElement.innerHTML = body;
-		}
-		else {
-			this.placeHolderElement.innerHTML = this.noWrap ? body : '<div id="'+this.elemId+'"'+(this.controlName ? ' class="ctrl-'+this.controlName+'"' : '')+'>' + body + '</div>';
-		}
-
-		this.processMarks(this.placeHolderElement.querySelectorAll("*"));
-		this.afterPlace(this.placeHolderElement);
+		this._afterPlace()
 	},
 
-	rePlace: function(force) {
-		// console.log('rePlace ' + this.controllName)
-		if(force && this.selector) this.bind(this.selector)
-		if(null === this.placeHolderElement) return;
-		this.place(this.placeHolderElement);
+	append: function(element) {
+		this.parentElement = element
+		this.parentElement.innerHTML = this.parentElement.innerHTML + this.render()
+
+		this._afterPlace()
 	},
 
-	afterPlace: function() {},
+	_afterPlace: function() {
+		this.el = document.getElementById(this.elemId)
 
+		var c = this.el.querySelectorAll("*")
+		this.processMarks([ this.el ]);
+		this.processMarks(c);
+		this.afterPlace(this.el);
+	},
+
+	afterPlace: function() { },
+	render: function() { return '' },
+
+	_marks: { },
 	marks: [
 		{ name: 'click',
 		  process: makeEventFunction('click')
@@ -211,13 +116,13 @@ var Control = Class.EventEmmiter.inherit({
 		{ name: 'contextmenu',
 		  process: makeEventFunction('contextmenu')
 		},
+		{ name: 'mousewheel',
+		  process: makeEventFunction('mousewheel', 'DOMMouseScroll')
+		},
 		{ name: 'after-place',
 		  process: function(item, value, control) {
 			control.execute(value, item);
 		  }
-		},
-		{ name: 'mousewheel',
-		  process: makeEventFunction('mousewheel', 'DOMMouseScroll')
 		},
 		{ name: 'hover',
 		  process: function(item, value, control) {
@@ -231,23 +136,34 @@ var Control = Class.EventEmmiter.inherit({
 		}
 	],
 
-	processMarks: function(items) {
-		var p = Control.prototype.global.plugins.DOMScanner ? Control.prototype.global.plugins.DOMScanner : [];
+	processMarks: function(items) {		
+		var marks = this._marks
 		for(var i = 0, l = items.length; i < l; i++) {
 			var item = items[i];
+			var atts = item.attributes;
+			// console.log(atts, atts.length)
+			for(var j = 0, k = atts.length; j < k; j++) {
+				var attr = atts[j]
+				if(attr) {
+					var aname = attr.name
+					if(aname.length > 5 && aname.substr(0, 5) === 'mark-' && aname in marks) {
+						var mark = marks[aname]
+						item.removeAttribute(aname);
+						mark.process(item, attr.value, this);
+					}
+				}
+			}
+			/*
 			for(var j = 0, k = this.marks.length; j < k; j++) {
 				var mark = this.marks[j];
 				var attr = 'mark-' + mark.name, value;
-				// if( (value = item.getAttribute(attr)) !== undefined ) {
 				if( item.hasAttribute(attr) ) {
 					value = item.getAttribute(attr)
 					item.removeAttribute(attr);
 					mark.process(item, value, this);
 				}
-				var u = p.length; while(u--) {
-					p[u].process(item);
-				}
 			}
+			*/
 		}
 	},
 
@@ -263,11 +179,13 @@ var Control = Class.EventEmmiter.inherit({
 		var func = '_q = function(_a,_c,element,arg1){' + text + 'return eval(_c);}';
 		// console.log(func);
 		return eval(func)(args, code, element, arg1);
-	},
-
-	destroy: function() {
 	}
 
 });
+
+for(var i = 0, c = Control.prototype.marks, l = c.length; i < l; i++) {
+	var m = c[i]
+	Control.prototype._marks['mark-' + m.name] = m
+}
 
 module.exports = Control;

@@ -9,6 +9,7 @@
     "ui/control/builder": [ "1.0" ],
     "ui/control/edit": [ "1.0" ],
     "ui/control/button": [ "1.0" ],
+    "ui/control/grid": [ "1.0" ],
     "ui/popup_menu": [ "1.0" ],
     "ui/element_helper": [ "1.0" ],
     "cookie": [ "1.0" ],
