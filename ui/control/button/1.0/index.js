@@ -4,11 +4,12 @@ var Control		= require('ui/control')
 
 var Button = Control.inherit({
 
-	params: 'width,caption'.split(','),
+	params: 'width,caption,name'.split(','),
 	// events: 'click'.split(','),
 
 	onInit: function(params) {
 		this.width = 100
+		// console.log(params)
 		for(var name in params) {
 			this[name] = params[name]
 		}
@@ -16,6 +17,8 @@ var Button = Control.inherit({
 
 	onClick: function() {
 		// this.emit('click', this)
+		// console.log('on_button_' + this.name + '_click')
+		this.fireEvent('on_button_' + this.name + '_click')
 	},
 
 	render: function() {

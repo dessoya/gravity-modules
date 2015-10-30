@@ -11,6 +11,10 @@ var Edit = Control.inherit({
 		this.type = 'text'
 		this.width = 100
 
+		for(var name in params) {
+			this[name] = params[name]
+		}
+
 		Object.defineProperty(this, 'value', {
 			// writable: true,
 			enumerable: true,

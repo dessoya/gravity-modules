@@ -30,15 +30,18 @@ function build(owner, element) {
 			var controlClass = item.getAttribute("control")
 			item.removeAttribute("control")
 
-			var controlName= item.getAttribute("name")
+			var controlName = item.getAttribute("name")
 			item.removeAttribute("name")
 
 			if(controlClass in Controls) {
 				var cc = Controls[controlClass]
-				var control = cc.create(readControlParams(item, cc.prototype.params))
+				var p = readControlParams(item, cc.prototype.params)
+				p.name = controlName
+				var control = cc.create(p)
 				// control.init()
 				// control.name = controlName
 				owner[controlName] = control
+				owner.addPlugin(control)
 				if(control.events) {
 					for(var i1 = 0, c1 = control.events, l1 = c1.length; i1 < l1; i1++) {
 						var event = c1[i1]

@@ -1,5 +1,7 @@
 
-var Class = require('class');
+var Class			= require('class')
+  , PluginManager	= require('pluginManager')
+
 
 // NodeList.prototype.unshift = Array.prototype.unshift;
 
@@ -22,13 +24,14 @@ function makeEventFunction(event, event2) {
 	}
 }
 
-var Control = Class.inherit({
+var Control = PluginManager.inherit({
 
 	global: {
 		idIterator: 1
 	},
 
 	onCreate: function() {
+		PluginManager.prototype.onCreate.apply(this, [])
 		this.elemId = 'ctrl-' + ( Control.prototype.global.idIterator ++ );
 		this.el = null;
 		if(this.onInit) {

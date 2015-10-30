@@ -2,8 +2,13 @@
 
 var Class			= require('class')
   , Builder			= require('ui/control/builder')
+  , PluginManager	= require('pluginManager')
 
-var Dialog = Class.inherit({
+var Dialog = PluginManager.inherit({
+
+    onCreate: function() {
+    	PluginManager.prototype.onCreate.apply(this, [])
+    },
 
 	open: function() {
 		
