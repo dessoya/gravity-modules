@@ -3,7 +3,7 @@
 	"coroutine": [ "1.0" ],
 	"commonStyles": [ "1.0" ],
     "net/ws": [ "1.0" ],
-    "net/ajax": [ "1.0" ],
+    "net/ajax": [ "1.0", "2.0" ],
     "ui/dialog": [ "1.0" ],
     "ui/control": [ "1.0" ],
     "ui/control/builder": [ "1.0" ],
@@ -13,9 +13,9 @@
     "ui/popup_menu": [ "1.0" ],
     "ui/element_helper": [ "1.0" ],
     "cookie": [ "1.0" ],
-    "hashSections": [ "1.0" ],
+    "hashSections": [ "1.0", "2.0" ],
     "qparams": [ "1.0" ],
     "threejs": [ "1.0" ],
-    "pluginManager": [ "1.0" ],
+    "pluginManager": [ "1.0", "2.0" ],
     "hash/md5": [ "1.0" ]
 }
